@@ -4,6 +4,17 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+
+typedef struct analise{
+  __clock_t timepesquisa;//tempo na pesquisa
+  __clock_t timepre;//tempo no pré processamento
+  int transpre;//transferencia no pré processamento
+  int transpesquisa;//transferencia na pesquisa
+  int comppre;//comparações no pré processamento
+  int comppesquisa;//comparações na pesquisa
+}Analise;
+
+
 typedef struct item{
   int chave;
   long int dado1;
@@ -17,14 +28,8 @@ typedef struct dadospesquisa{
   int situacao;
   int chave;
   char op[3];
+  Analise analise;
 } DadosPesquisa;
 
-typedef struct analise{
-  long int timepesquisa;//tempo na pesquisa
-  long int timepro;//tempo no pré processamento
-  int transpre;//transferencia no pré processamento
-  int transpesquisa;//transferencia na pesquisa
-  int comppre;//comparações no pré processamento
-  int comppesquisa;//comparações na pesquisa
-}Analise;
+
 #endif // ITEM_H
