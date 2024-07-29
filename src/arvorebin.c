@@ -54,11 +54,11 @@ bool pesquisaArvoreBin(FILE *arvoreBin,int *quantidade, Item info){
     quantidade = 0;
     while (fread(&aux,sizeof(Registro),1,arvoreBin) == 1){
         if(aux.key.chave != info.chave){
-            if(info < aux.key.chave){
+            if(info.chave < aux.key.chave){
                 fseek(arvoreBin,sizeof(Registro) * aux.esq,0);
                 quantidade++;
             }
-            if(info > aux.key.chave){
+            if(info.chave > aux.key.chave){
                 fseek(arvoreBin,sizeof(Registro) * aux.dir,0);
                 quantidade++;
             }
