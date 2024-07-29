@@ -22,6 +22,20 @@ int erros() {
   return 0;
 }
 
+int printTeste(){
+  FILE *pFile2;
+  pFile2 = fopen("aleatorio.bin", "rb");
+  Item vetorTeste[100];
+  fread(vetorTeste,sizeof(Item), 100, pFile2);
+  printf("\n\n");
+  for(int w = 0; w < 100; w++){
+    printf("Item %i\n", vetorTeste[w].chave);
+  }
+
+  fclose(pFile2);
+  return 0;
+}
+
 int menu(int argc, char **argv) {
   /*
     argv[0] nome do executavel - pesquisa
@@ -39,6 +53,12 @@ int menu(int argc, char **argv) {
   entrada.quant = atoi(argv[2]);
   entrada.situacao = atoi(argv[3]);
   entrada.chave = atoi(argv[4]);
+  //Zera as variaveis que contam e analisam o desempenho
+  
+  entrada.analise.comppesquisa = 0;
+  entrada.analise.transpre = 0;
+  entrada.analise.transpesquisa = 0;
+  entrada.analise.comppre = 0;
 
   printf("%i %li %i %i",entrada.metodo, entrada.quant, entrada.situacao, entrada.chave );
 
@@ -77,19 +97,24 @@ int menu(int argc, char **argv) {
     
     }
   }
+  
+  
+
+
   switch(entrada.metodo){
     case 1:
-      acessoSequencial(pFile, entrada.quant, entrada.situacao, &x, entrada.chave);
+
+      acessoSequencial(pFile, entrada.quant, entrada.situacao, &x, entrada.chave, &entrada);
       
     break;
     case 2:
-      acessoSequencial(pFile, entrada.quant, entrada.situacao, &x, entrada.chave);
+      acessoSequencial(pFile, entrada.quant, entrada.situacao, &x, entrada.chave, &entrada);
     break;
     case 3:
-      acessoSequencial(pFile, entrada.quant, entrada.situacao, &x, entrada.chave);
+      acessoSequencial(pFile, entrada.quant, entrada.situacao, &x, entrada.chave, &entrada);
     break;
     case 4:
-      acessoSequencial(pFile, entrada.quant, entrada.situacao, &x, entrada.chave);
+      acessoSequencial(pFile, entrada.quant, entrada.situacao, &x, entrada.chave, &entrada);
     break;
     case 5:
       gerar(pFile, entrada);
@@ -99,6 +124,9 @@ int menu(int argc, char **argv) {
       printf("\nOpção invalida\n");
 
   }
+
+  //printTeste();
+
   if(argc != 5){
     fclose(pFile);
   }
