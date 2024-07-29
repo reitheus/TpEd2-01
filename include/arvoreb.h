@@ -11,8 +11,8 @@ TipoChave Chave;
     typedef struct TipoPagina* TipoApontador;
     typedef struct TipoPagina {
     short n;
-    TipoRegistro r[MM];
-    TipoApontador p[MM + 1];
+    TipoRegistro r[2];
+    TipoApontador p[2 + 1];
 } TipoPagina;
 
 #endif //arvoreb.h

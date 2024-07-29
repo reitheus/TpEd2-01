@@ -1,5 +1,19 @@
 #include "../include/arvorebin.h"
 
+void imprimeAbin(Item dado){
+
+    printf("\n");
+    printf("---------------------------------------------------------------------------------------\n");
+    printf("|  Encontrou a Chave!  |\n");
+    printf("---------------------------------------------------------------------------------------\n");
+    printf("|Chave: %i |\n",dado.chave);
+    printf("|Dado1: %li|\n",dado.dado1);
+    printf("|Dado2: %s |\n",dado.dado2);
+    printf("|Dado3: %s |\n",dado.dado3);
+    printf("-----------------------------------------------------------------------------------------\n");
+    printf("\n");
+}
+
 //cria uma arvore em memoria externa
 void criaArvoreBin(FILE *arvoreBin, FILE *arquivo, long *quantidade, Analise *dado){
     
@@ -79,6 +93,7 @@ bool pesquisaArvoreBin(FILE *arquivo,long *quantidade,int* situacao,int chaveP,A
             if(dado.comppesquisa == 0){
                 dado.comppesquisa = 1;
             }
+            imprimeAbin(aux.key);
             return true;
         }
 

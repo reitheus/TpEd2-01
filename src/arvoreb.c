@@ -9,8 +9,9 @@ void Imprime(TipoApontador arvore){
     if (arvore == NULL) return;
     while (i <= arvore->n) {
         Imprime(arvore->p[i]);
-        if (i != arvore->n)
-        cout << arvore->r[i].Chave << " ";
+        if (i != arvore->n){
+            printf("%d\n",arvore->r[i].Chave);
+        }
         i++;
     }
  }
