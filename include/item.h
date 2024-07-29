@@ -3,11 +3,12 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 
 typedef struct analise{
-  __clock_t timepesquisa;//tempo na pesquisa
-  __clock_t timepre;//tempo no pré processamento
+  clock_t timepesquisa;//tempo na pesquisa
+  clock_t timepre;//tempo no pré processamento
   int transpre;//transferencia no pré processamento
   int transpesquisa;//transferencia na pesquisa
   int comppre;//comparações no pré processamento

@@ -11,8 +11,8 @@ typedef struct registro{
     int esq;
 }Registro;
 
-void criaArvore(FILE* ,FILE* ,int );
-bool pesquisaArvoreBin(FILE* ,int* ,Item );
+void criaArvoreBin(FILE* ,FILE* ,long* ,Analise* );
+bool pesquisaArvoreBin(FILE* ,long* ,int* ,int ,Analise );
 
 
 #endif // arvorebin.h

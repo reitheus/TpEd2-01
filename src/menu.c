@@ -1,6 +1,7 @@
 #include "../include/menu.h"
 #include "../include/item.h"
 #include "../include/sequencial.h"
+#include "../include/arvorebin.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -108,7 +109,7 @@ int menu(int argc, char **argv) {
       
     break;
     case 2:
-      acessoSequencial(pFile, entrada.quant, entrada.situacao, &x, entrada.chave, &entrada);
+      pesquisaArvoreBin(pFile,&entrada.quant,&entrada.situacao,entrada.chave,entrada.analise);
     break;
     case 3:
       acessoSequencial(pFile, entrada.quant, entrada.situacao, &x, entrada.chave, &entrada);
