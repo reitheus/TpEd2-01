@@ -61,7 +61,7 @@ int menu(int argc, char **argv) {
   entrada.analise.transpesquisa = 0;
   entrada.analise.comppre = 0;
 
-  printf("%i %li %i %i",entrada.metodo, entrada.quant, entrada.situacao, entrada.chave );
+  //printf("Arquivo gerado!\n");
 
 
   if(argc == 6){

@@ -11,7 +11,7 @@ typedef struct registro{
     int esq;
 }Registro;
 
-void imprimeAbin(Item);
+void imprimeAbin(Registro* ,Analise* );
 void criaArvoreBin(FILE* ,FILE* ,long* ,Analise* );
 bool pesquisaArvoreBin(FILE* ,long* ,int* ,int ,Analise );
 

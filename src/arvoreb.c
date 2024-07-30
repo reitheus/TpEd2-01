@@ -10,7 +10,7 @@ void Imprime(TipoApontador arvore){
     while (i <= arvore->n) {
         Imprime(arvore->p[i]);
         if (i != arvore->n){
-            printf("%d\n",arvore->r[i].Chave);
+            printf("%li\n",arvore->r[i].Chave);
         }
         i++;
     }
