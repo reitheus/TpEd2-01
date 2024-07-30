@@ -21,8 +21,7 @@ int escolheQuantItens(int numItems){
 
 }
 
-//Parametros: ponteiro da tabela de paginas, tamanho da tabela, item que vai ser retornado, arquivo, quantidade de itens por pagina
-// situação da ordem do arquivo, chave que vai ser pesquisada
+//Parametros: ponteiro da tabela de paginas, tamanho da tabela, item que vai ser retornado, arquivo, quantidade de itens por pagina, situação da ordem do arquivo, chave que vai ser pesquisada
 int pesquisa(int *tab, int tam, Item* item, FILE *pFile, int itensPagina, int situation, int chave, DadosPesquisa *entrada){
   Dicionario dicio;
   Item *pagina;
@@ -35,10 +34,10 @@ int pesquisa(int *tab, int tam, Item* item, FILE *pFile, int itensPagina, int si
   i = 0;
   entrada->analise.comppesquisa++;
   while(i < tam && tab[i] <= chave){//procura em qual pagina se encontra o item
-    //printf("\nfind %i\n", tab[i]);
+
     entrada->analise.comppesquisa++;
     i++;
-    //printf("\ni %i\n", i);
+
   }
   
   if(i == 0) //se i = 0 o item não esta no arquivo
@@ -69,12 +68,12 @@ int pesquisa(int *tab, int tam, Item* item, FILE *pFile, int itensPagina, int si
 
     //Faz a pesquisa binaria se for crescente ou decrescente, se estiver fora de ordem faz a pesquisa sequencial
     posNaPag = dicionarioFind(&dicio , situation, chave);
-    //printf("ii %i", chave);
+
     
     //Verifica se achou o item se não achar retorna 0
     entrada->analise.timepesquisa = clock() - entrada->analise.timepesquisa;
     if(posNaPag < 0){
-      //*item = NULL;
+
       free(pagina);
       return 0;
 
@@ -113,7 +112,7 @@ int acessoSequencial(FILE *pFile, int numItems, int situation, Item *item, int c
   entrada->analise.transpre++;
   pos = 0;//inicia a posição
   while (fread(vetX, sizeof(Item), quantpagtemp, pFile) != 0 && conti < entrada->quant){//Cria a tabela de paginas
-    //printf("\npage %i\n", vetX[0].chave);
+
     conti = conti + itensPagina;
     tabela[pos] = vetX[0].chave;
     entrada->analise.transpre++;
@@ -128,23 +127,23 @@ int acessoSequencial(FILE *pFile, int numItems, int situation, Item *item, int c
   if(pesquisa(tabela, pos, item, pFile, itensPagina, situation, chave, entrada)){//usa a função pesquisa para achar o item no arquivo
     printf("\nItem localizado com Sucesso!\n");
     printf("Item = %i\n",item->chave);
-    printf("Quantidade de transferencias no Pré processamento = %i\n", entrada->analise.transpre);
-    printf("Quantidade de transferencias na pesquisa = %i\n", entrada->analise.transpesquisa);
-    printf("Quantidade de comparações no pré processamento = %i\n", entrada->analise.comppre);
-    printf("Quantidade de comparações na pesquisa = %i\n", entrada->analise.transpesquisa);
-    printf("Tempo de execução do pré processamento = %lf\n", ((double)entrada->analise.transpre/CLOCKS_PER_SEC));
-    printf("Tempo de execução na pesquisa = %lf\n", ((double)entrada->analise.transpre/CLOCKS_PER_SEC));
+    printf("Quantidade de transferencias no Pré processamento = %d\n",entrada->analise.transpre);
+    printf("Quantidade de transferencias na pesquisa = %d\n", entrada->analise.transpesquisa);
+    printf("Quantidade de comparações no pré processamento = %d\n", entrada->analise.comppre);
+    printf("Quantidade de comparações na pesquisa = %d\n", entrada->analise.comppesquisa);
+    printf("Tempo de execução do pré processamento = %lf segundos\n", entrada->analise.timepre/CLOCKS_PER_SEC);
+    printf("Tempo de execução na pesquisa = %lf segundos\n", entrada->analise.timepesquisa/CLOCKS_PER_SEC);
     free(tabela);
     
     return 1;
   }else{
     printf("\nItem não localizado!\n");
-    printf("Quantidade de transferencias no Pré processamento = %i\n", entrada->analise.transpre);
-    printf("Quantidade de transferencias na pesquisa = %i\n", entrada->analise.transpesquisa);
-    printf("Quantidade de comparações no pré processamento = %i\n", entrada->analise.comppre);
-    printf("Quantidade de comparações na pesquisa = %i\n", entrada->analise.transpesquisa);
-    printf("Tempo de execução do pré processamento = %i\n", entrada->analise.transpre);
-    printf("Tempo de execução na pesquisa = %i\n", entrada->analise.transpre);
+    printf("Quantidade de transferencias no Pré processamento = %d\n",entrada->analise.transpre);
+    printf("Quantidade de transferencias na pesquisa = %d\n", entrada->analise.transpesquisa);
+    printf("Quantidade de comparações no pré processamento = %d\n", entrada->analise.comppre);
+    printf("Quantidade de comparações na pesquisa = %d\n", entrada->analise.comppesquisa);
+    printf("Tempo de execução do pré processamento = %lf segundos\n", entrada->analise.timepre/CLOCKS_PER_SEC);
+    printf("Tempo de execução na pesquisa = %lf segundos\n", entrada->analise.timepesquisa/CLOCKS_PER_SEC);
     free(tabela);
     
     return 0;

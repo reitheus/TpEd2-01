@@ -7,8 +7,8 @@
 
 
 typedef struct analise{
-  clock_t timepesquisa;//tempo na pesquisa
-  clock_t timepre;//tempo no pré processamento
+  double timepre;//tempo na pesquisa
+  double timepesquisa;;//tempo no pré processamento
   int transpre;//transferencia no pré processamento
   int transpesquisa;//transferencia na pesquisa
   int comppre;//comparações no pré processamento

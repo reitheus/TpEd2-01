@@ -1,5 +1,6 @@
 {
     "files.associations": {
-        "arvorebin.h": "c"
+        "arvorebin.h": "c",
+        "stdbool.h": "c"
     }
 }

@@ -11,9 +11,13 @@ typedef struct registro{
     int esq;
 }Registro;
 
-void imprimeAbin(Registro* ,Analise* );
+void imprimeDado(Analise* ,Registro* );
+
+void arvoreBinaria(FILE* ,long* ,int* ,Analise );
+
 void criaArvoreBin(FILE* ,FILE* ,long* ,Analise* );
-bool pesquisaArvoreBin(FILE* ,long* ,int* ,int ,Analise );
+
+bool pesquisaArvoreBin(FILE* ,int ,Analise* ,Registro* );
 
 
 #endif // arvorebin.h

@@ -61,8 +61,6 @@ int menu(int argc, char **argv) {
   entrada.analise.transpesquisa = 0;
   entrada.analise.comppre = 0;
 
-  //printf("Arquivo gerado!\n");
-
 
   if(argc == 6){
     strcpy(entrada.op, argv[5]);
@@ -109,7 +107,7 @@ int menu(int argc, char **argv) {
       
     break;
     case 2:
-      pesquisaArvoreBin(pFile,&entrada.quant,&entrada.situacao,entrada.chave,entrada.analise);
+      arvoreBinaria(pFile,&entrada.quant,&entrada.chave,entrada.analise);
     break;
     case 3:
       acessoSequencial(pFile, entrada.quant, entrada.situacao, &x, entrada.chave, &entrada);
