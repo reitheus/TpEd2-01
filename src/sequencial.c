@@ -22,7 +22,7 @@ int escolheQuantItens(int numItems){
 bool pesquisaSequencial(int *tab, int tam, Item* item, FILE *pFile, int itensPagina, int situation, int chave, DadosPesquisa *entrada){
   Dicionario dicio;
   Item *pagina;
-  entrada->analise.timepesquisa = clock();
+  entrada->analise.timepesquisa = (double)clock();
   pagina = (Item*)malloc(sizeof(Item) * itensPagina);// alloca uma pagina
   int i, quantItens;// i e quantidade de itens da pagina
   int posNaPag;
@@ -68,7 +68,7 @@ bool pesquisaSequencial(int *tab, int tam, Item* item, FILE *pFile, int itensPag
 
     
     //Verifica se achou o item se não achar retorna 0
-    entrada->analise.timepesquisa = clock() - entrada->analise.timepesquisa;
+    entrada->analise.timepesquisa = ((double)clock() - entrada->analise.timepesquisa)/CLOCKS_PER_SEC;
     if(posNaPag < 0){
 
       free(pagina);
@@ -120,9 +120,9 @@ void acessoSequencial(FILE *pFile, int numItems, int situation, Item *item, int 
   }
   
  
-  entrada->analise.timepre = clock() - entrada->analise.timepre;
-  bool pesq = pesquisaSequencial(tabela, pos, item, pFile, itensPagina, situation, chave, entrada);
-  impreResultado(pesq,entrada,item);//usa a função pesquisa para achar o item no arquivo
+  entrada->analise.timepre = ((double)clock() - entrada->analise.timepre)/CLOCKS_PER_SEC;
+  bool pesq = pesquisaSequencial(tabela, pos, item, pFile, itensPagina, situation, chave, entrada);//usa a função pesquisa para achar o item no arquivo
+  impreResultado(pesq,entrada,item);
 
   free(vetX);
   free(tabela);
