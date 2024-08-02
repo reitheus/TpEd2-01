@@ -5,8 +5,7 @@
 
 #define M 10// Ordem da árvore
 
-
-bool inicializa(Apontadores Arvore){
+void inicializa(Apontadores Arvore){
     Arvore = NULL; 
 }
 
@@ -92,7 +91,7 @@ void ins(Item x,Apontadores Arvore, short *cresceu, Item* registroretorno, Apont
 }
 
 
-bool insere(Item x, Apontadores* Arvore){
+void insere(Item x, Apontadores* Arvore){
 
     short cresceu;
     Item registroretorno; 
@@ -122,7 +121,7 @@ void imprimirDados(Item x){
 }
 
 
-bool pesquisar(Item *x, Apontadores Arvore){
+void pesquisar(Item *x, Apontadores Arvore){
 
     long i = 1; 
     
