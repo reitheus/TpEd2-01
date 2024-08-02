@@ -3,16 +3,22 @@
 
 #include "../include/item.h"
 
-typedef long TipoChave;
-typedef struct TipoRegistro {
-TipoChave Chave;
-/* outros componentes */
-} TipoRegistro;
-    typedef struct TipoPagina* TipoApontador;
-    typedef struct TipoPagina {
-    short n;
-    TipoRegistro r[2];
-    TipoApontador p[2 + 1];
-} TipoPagina;
+#define M 10// Ordem da árvore
 
-#endif //arvoreb.h
+//criando variável ponteiro do tipo página
+typedef struct Pagina* Apontadores;
+
+typedef struct Pagina {
+    short quant;// quantidades de itens nos vetores 
+    Item pai[M*M];// vetor de itens 
+    Apontadores filhos[(M*M) + 1]; // vetor de apontadores 
+} Pagina; 
+
+void inicializa(Apontadores Arvore);
+void pesquisar(Item* x, Apontadores Arvore);
+void insere(Item x, Apontadores* Arvore); 
+void ins(Item x,Apontadores Arvore, short *cresceu, Item* registroretorno, Apontadores* ApRetorno);
+void inserenaPagina(Apontadores Arvore, Item dados, Apontadores ApDir);
+void imprimir(Item x);
+
+#endif// arvorebEst.h
