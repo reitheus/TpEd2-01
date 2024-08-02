@@ -8,3 +8,4 @@ Ao final do trabalho, espera-se obter uma compreensão mais aprofundada da compl
 
 O projeto será desenvolvido na disciplina de Estrutura de Dados 2, no semestre 22.2. O objetivo principal é aplicar os conceitos aprendidos em sala de aula e aprofundar o conhecimento sobre métodos de pesquisa externa. O trabalho prático será realizado em equipe, promovendo a colaboração e o compartilhamento de ideias entre os membros.
 
+https://prod.liveshare.vsengsaas.visualstudio.com/join?2621FD2FE8BBF9ECD95628080F0E8873FA11
