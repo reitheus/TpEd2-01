@@ -10,45 +10,6 @@ void inicializa(Apontadores* Arvore){// cria apontador para a arvore
     *Arvore = NULL; 
 }
 
-void criaarvoreb(Analise *analise, FILE *arquivo, Item *registro, int situacao, long int quant, int metodo){
-
-    Apontadores Arvore;
-    clock_t timepre;//tempo na pre processamento
-    clock_t timepesquisa;//tempo de pesquisa 
-
-     //dados de analise do processo 
-    Inicializa(&Arvore);
-    analise->comppesquisa = 0;//comparações na pesquisa
-    analise->comppre = 0; //comparações no pré processamento
-    analise->transpre = 0;///transferencia no pré processamento
-    analise->transpesquisa = 0;//transferencia na pesquisa
-
-    int i = 0;
-
-    timepre = clock();// marcar o tempo de inicio do processamento
-
-    //lendo dados do arquivo e inserindo na arvore
-    while((fread(&registro, sizeof(Item), 1, arquivo) == 1) && i<quant){     
-           if (metodo == 1){
-            printf("Chave %ld\n", registro->chave);
-        }
-        i++;
-        insere(*registro, &Arvore, analise);
-    } 
-
-    timepre = clock() - (double)timepre; // fim do processamento 
-    //numero de comparações ao inserir dados
-    analise->comppre = ((double)timepre) / CLOCKS_PER_SEC;
-
-    timepesquisa = clock();//guarda o tempo inicial da pesquisa 
-    pesquisar(registro, Arvore, analise);
-
-    timepesquisa = clock() - (double)timepesquisa;//marca fim da pesquisa e realiza calcula a diferença de tempo 
-    // quantidade de comparações com a chave
-    analise->comppesquisa = ((double)(timepesquisa))/ CLOCKS_PER_SEC;
-
-    LiberaArvore(&Arvore); //chamada da função para liberar arvore da memória principal
-}
 
 //insere os registros nas paginas 
 void inserenaPagina(Apontadores Arvore, Item dados, Apontadores ApDir, Analise* analise){
@@ -80,6 +41,7 @@ void inserenaPagina(Apontadores Arvore, Item dados, Apontadores ApDir, Analise* 
     Arvore->quant++;//os itens na pagina aumenta
 }
 
+
 void ins(Item x,Apontadores Arvore, short *cresceu, Item* registroretorno, Apontadores* ApRetorno, Analise* analise){
 
     long i = 1;
@@ -94,9 +56,9 @@ void ins(Item x,Apontadores Arvore, short *cresceu, Item* registroretorno, Apont
         return;
     }
 
-// Enquanto o valor de `i` for menor que a quantidade de itens na árvore
-// e a chave do item `x` for maior que a chave do item na posição `i-1` do vetor `pai` da árvore,
-// incrementa `i` para continuar a busca na próxima posição.
+    // Enquanto o valor de `i` for menor que a quantidade de itens na árvore
+    // e a chave do item `x` for maior que a chave do item na posição `i-1` do vetor `pai` da árvore,
+    // incrementa `i` para continuar a busca na próxima posição.
     while(i < Arvore->quant && x.chave > Arvore->pai[i-1].chave){
         i++;
         analise->comppre++; 
@@ -151,8 +113,7 @@ void ins(Item x,Apontadores Arvore, short *cresceu, Item* registroretorno, Apont
     *ApRetorno = ApTemp;
 }
 
-
-void insere(Item x, Apontadores* Arvore, Analise, Analise* analise){
+void insere(Item x, Apontadores* Arvore, Analise* analise){
 
     short cresceu;
     Item registroretorno; 
@@ -170,6 +131,7 @@ void insere(Item x, Apontadores* Arvore, Analise, Analise* analise){
 
     }
 }
+
 
 // imprimir dados da pesquisa , tempo , leituras e as comparações 
 void imprimirDados(Item x){
@@ -219,6 +181,7 @@ void pesquisar(Item *x, Apontadores Arvore, Analise* analise){
         pesquisar(x, Arvore->filhos[i], analise);
 }
 
+
 void LiberaPagina(Apontadores Ap){ // Funcão recurssiva para liberar cada nodo da arvore 
     if (Ap != NULL){
         for (int i = 0; i <= Ap->quant; i++){
@@ -228,6 +191,7 @@ void LiberaPagina(Apontadores Ap){ // Funcão recurssiva para liberar cada nodo 
     }
 }
 
+
 void LiberaArvore(Apontadores *Arvore){
     if (*Arvore != NULL){
         LiberaPagina(*Arvore); // chamada para função recurssiva
@@ -235,4 +199,45 @@ void LiberaArvore(Apontadores *Arvore){
     }
 }
 
+
+void criaarvoreb(Analise *analise, FILE *arquivo, Item *registro, int situacao, long int quant, int metodo){
+
+    Apontadores Arvore;
+    clock_t timepre;//tempo na pre processamento
+    clock_t timepesquisa;//tempo de pesquisa 
+
+     //dados de analise do processo 
+    inicializa(&Arvore);
+    analise->comppesquisa = 0;//comparações na pesquisa
+    analise->comppre = 0; //comparações no pré processamento
+    analise->transpre = 0;///transferencia no pré processamento
+    analise->transpesquisa = 0;//transferencia na pesquisa
+
+    int i = 0;
+
+    timepre = clock();// marcar o tempo de inicio do processamento
+
+    //lendo dados do arquivo e inserindo na arvore
+    while((fread(&registro, sizeof(Item), 1, arquivo) == 1) && i<quant){     
+           if (metodo == 1){
+            printf("Chave %ld\n", registro->chave);
+        }
+        i++;
+        insere(*registro, &Arvore, analise);
+
+    } 
+
+    timepre = clock() - (double)timepre; // fim do processamento 
+    //numero de comparações ao inserir dados
+    analise->comppre = ((double)timepre) / CLOCKS_PER_SEC;
+
+    timepesquisa = clock();//guarda o tempo inicial da pesquisa 
+    pesquisar(registro, Arvore, analise);
+
+    timepesquisa = clock() - (double)timepesquisa;//marca fim da pesquisa e realiza calcula a diferença de tempo 
+    // quantidade de comparações com a chave
+    analise->comppesquisa = ((double)(timepesquisa))/ CLOCKS_PER_SEC;
+
+    LiberaArvore(&Arvore); //chamada da função para liberar arvore da memória principal
+}
 
