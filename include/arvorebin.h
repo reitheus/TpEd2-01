@@ -2,8 +2,7 @@
 #define ARVOREBIN_H
 
 #include "../include/item.h"
-#include <stdbool.h>
-#include <stdio.h>
+
 
 typedef struct registro{
     Item key;
@@ -13,7 +12,7 @@ typedef struct registro{
 
 void imprimeDado(Analise* ,Registro* );
 
-void arvoreBinaria(FILE* ,long* ,int* ,Analise );
+void arvoreBinaria(FILE* ,long* ,int* ,DadosPesquisa* ,Item* );
 
 void criaArvoreBin(FILE* ,FILE* ,long* ,Analise* );
 

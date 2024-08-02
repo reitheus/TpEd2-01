@@ -3,8 +3,6 @@
 #include "../include/sequencial.h"
 #include "../include/arvorebin.h"
 #include <ctype.h>
-#include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 
 
@@ -107,7 +105,7 @@ int menu(int argc, char **argv) {
       
     break;
     case 2:
-      arvoreBinaria(pFile,&entrada.quant,&entrada.chave,entrada.analise);
+      arvoreBinaria(pFile,&entrada.quant,&entrada.chave,&entrada,&x);
     break;
     case 3:
       acessoSequencial(pFile, entrada.quant, entrada.situacao, &x, entrada.chave, &entrada);

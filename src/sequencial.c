@@ -1,6 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
 #include "../include/sequencial.h"
 
 
@@ -22,7 +19,7 @@ int escolheQuantItens(int numItems){
 }
 
 //Parametros: ponteiro da tabela de paginas, tamanho da tabela, item que vai ser retornado, arquivo, quantidade de itens por pagina, situação da ordem do arquivo, chave que vai ser pesquisada
-int pesquisa(int *tab, int tam, Item* item, FILE *pFile, int itensPagina, int situation, int chave, DadosPesquisa *entrada){
+bool pesquisaSequencial(int *tab, int tam, Item* item, FILE *pFile, int itensPagina, int situation, int chave, DadosPesquisa *entrada){
   Dicionario dicio;
   Item *pagina;
   entrada->analise.timepesquisa = clock();
@@ -41,7 +38,7 @@ int pesquisa(int *tab, int tam, Item* item, FILE *pFile, int itensPagina, int si
   }
   
   if(i == 0) //se i = 0 o item não esta no arquivo
-    return 0;
+    return false;
   else {
     // a ultima página pode não estar completa
     if (i < tam){ 
@@ -75,23 +72,23 @@ int pesquisa(int *tab, int tam, Item* item, FILE *pFile, int itensPagina, int si
     if(posNaPag < 0){
 
       free(pagina);
-      return 0;
+      return false;
 
     }else{// se achar o item retorna o item por ponteiro e retorna verdadeiro
       *item = pagina[posNaPag];
       
       free(pagina);
-      return 1;
+      return true;
     }
     
     free(pagina);
-    return 0;
+    return false;
   }
 
 }
 
 //Parametros: arquivo, quantidade de itens no arquivo, chave que vai ser pesquisada
-int acessoSequencial(FILE *pFile, int numItems, int situation, Item *item, int chave, DadosPesquisa *entrada){
+void acessoSequencial(FILE *pFile, int numItems, int situation, Item *item, int chave, DadosPesquisa *entrada){
 
   //variavel para testes
   entrada->analise.timepre = clock();
@@ -124,33 +121,10 @@ int acessoSequencial(FILE *pFile, int numItems, int situation, Item *item, int c
   
  
   entrada->analise.timepre = clock() - entrada->analise.timepre;
-  if(pesquisa(tabela, pos, item, pFile, itensPagina, situation, chave, entrada)){//usa a função pesquisa para achar o item no arquivo
-    printf("\nItem localizado com Sucesso!\n");
-    printf("Item = %i\n",item->chave);
-    printf("Quantidade de transferencias no Pré processamento = %d\n",entrada->analise.transpre);
-    printf("Quantidade de transferencias na pesquisa = %d\n", entrada->analise.transpesquisa);
-    printf("Quantidade de comparações no pré processamento = %d\n", entrada->analise.comppre);
-    printf("Quantidade de comparações na pesquisa = %d\n", entrada->analise.comppesquisa);
-    printf("Tempo de execução do pré processamento = %lf segundos\n", entrada->analise.timepre/CLOCKS_PER_SEC);
-    printf("Tempo de execução na pesquisa = %lf segundos\n", entrada->analise.timepesquisa/CLOCKS_PER_SEC);
-    free(tabela);
-    
-    return 1;
-  }else{
-    printf("\nItem não localizado!\n");
-    printf("Quantidade de transferencias no Pré processamento = %d\n",entrada->analise.transpre);
-    printf("Quantidade de transferencias na pesquisa = %d\n", entrada->analise.transpesquisa);
-    printf("Quantidade de comparações no pré processamento = %d\n", entrada->analise.comppre);
-    printf("Quantidade de comparações na pesquisa = %d\n", entrada->analise.comppesquisa);
-    printf("Tempo de execução do pré processamento = %lf segundos\n", entrada->analise.timepre/CLOCKS_PER_SEC);
-    printf("Tempo de execução na pesquisa = %lf segundos\n", entrada->analise.timepesquisa/CLOCKS_PER_SEC);
-    free(tabela);
-    
-    return 0;
+  bool pesq = pesquisaSequencial(tabela, pos, item, pFile, itensPagina, situation, chave, entrada);
+  impreResultado(pesq,entrada,item);//usa a função pesquisa para achar o item no arquivo
 
-  }
   free(vetX);
   free(tabela);
-  
-  return 0;
+
 }

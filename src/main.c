@@ -1,5 +1,4 @@
 #include "../include/menu.h"
-#include <stdio.h>
 
 int main(int argc, char **argv) {
   menu(argc, argv);

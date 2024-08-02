@@ -1,5 +1,4 @@
 #include "../include/arvoreb.h"
-#include <stdio.h>
 
 #define M 10// Ordem da árvore
 
@@ -14,7 +13,7 @@ void inserenaPagina(Apontadores Arvore, Item dados, Apontadores ApDir){
     k = Arvore->quant; 
     Nhaposicao = (k > 0);
 
-    While(Nhaposicao){
+    while(Nhaposicao){
 
         if(registro.chave >= Arvore->pai[k-1].chave){
             Nhaposicao = false;

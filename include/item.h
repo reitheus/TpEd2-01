@@ -4,6 +4,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <stdbool.h>
+#include <string.h>
 
 
 typedef struct analise{
@@ -32,5 +34,8 @@ typedef struct dadospesquisa{
   Analise analise;
 } DadosPesquisa;
 
+void impreResultado(bool ,DadosPesquisa* ,Item* );
+
+void impremeDado(DadosPesquisa* ,Item* );
 
 #endif // ITEM_H

@@ -2,7 +2,7 @@
 #define ARVOREBEST_H
 
 #include "../include/item.h"
-#include <stdio.h>
+
 
 #define M 10// Ordem da árvore
 

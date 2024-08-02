@@ -1,23 +1,8 @@
 #include "../include/arvorebin.h"
 
-void imprimeDado(Analise *dado, Registro *entrada) {
-    printf("|  Chave: %i\n", entrada->key.chave);
-    printf("|  Dado1: %li\n", entrada->key.dado1);
-    printf("|  Dado2: %s\n", entrada->key.dado2);
-    printf("|  Dado3: %s\n", entrada->key.dado3);
-    printf("-----------------------------------------------------------------------------------------\n");
-    printf("|  Quantidade de transferencias no Pré processamento = %d\n", dado->transpre);
-    printf("|  Quantidade de transferencias na pesquisa = %d\n", dado->transpesquisa);
-    printf("|  Quantidade de comparações no pré processamento = %d\n", dado->comppre);
-    printf("|  Quantidade de comparações na pesquisa = %d\n", dado->comppesquisa);
-    printf("|  Tempo de execução do pré processamento = %lf segundos\n", dado->timepre);
-    printf("|  Tempo de execução na pesquisa = %lf segundos\n", dado->timepesquisa);
-    printf("-----------------------------------------------------------------------------------------\n");
-}
-
 // cria uma arvore em memoria externa
 void criaArvoreBin(FILE *arvoreBin, FILE *arquivo, long *quantidade, Analise *dado) {
-    time_t ini = time(NULL);
+    dado->timepre = (double)clock();
     if (arvoreBin == NULL || arquivo == NULL) {
         printf("Erro no arquivo\n");
         return;
@@ -67,13 +52,12 @@ void criaArvoreBin(FILE *arvoreBin, FILE *arquivo, long *quantidade, Analise *da
         }
         i++;
     }
-    time_t fim = time(NULL);
-    dado->timepre = difftime(fim, ini);
+    dado->timepre = (double)clock() - dado->timepre;
 }
 
 // Pesquisa da Arvore binaria de pesquisa em memoria externa
 bool pesquisaArvoreBin(FILE *arvoreBin, int chaveP, Analise *dado, Registro* aux) {
-    time_t timepesquisa0 = time(NULL);
+    dado->timepesquisa = (double)clock();
     dado->transpesquisa += 1;
     fseek(arvoreBin, 0, SEEK_SET);
     while (fread(aux, sizeof(Registro), 1, arvoreBin) == 1) {
@@ -92,37 +76,19 @@ bool pesquisaArvoreBin(FILE *arvoreBin, int chaveP, Analise *dado, Registro* aux
             if (dado->comppesquisa == 0) {
                 dado->comppesquisa += 1;
             }
-            dado->timepesquisa = difftime(time(NULL), timepesquisa0);
+            dado->timepesquisa = clock() - dado->timepesquisa;
             return true;
         }
     }
-    dado->timepesquisa = difftime(time(NULL), timepesquisa0);
+    dado->timepesquisa = (double)clock() - dado->timepesquisa;
     return false;
 }
 
-void arvoreBinaria(FILE* arquivo, long* quantidade, int *chave, Analise dado) {
+void arvoreBinaria(FILE* arquivo, long* quantidade, int *chave,DadosPesquisa* dado,Item *info) {
     FILE *arvoreBin = fopen("ArvoreBin.bin", "w+b");
-    Registro entrada;
-    dado.comppesquisa = 0;
-    dado.transpesquisa = 0;
-    dado.comppre = 0;
-    dado.transpre = 0;
-    criaArvoreBin(arvoreBin, arquivo, quantidade, &dado);
-
-    if (pesquisaArvoreBin(arvoreBin, *chave, &dado, &entrada)) {
-        printf("\n");
-        printf("---------------------------------------------------------------------------------------\n");
-        printf("|  Encontrou a Chave!  \n");
-        printf("---------------------------------------------------------------------------------------\n");
-        imprimeDado(&dado, &entrada);
-        printf("\n");
-    } else {
-        printf("\n");
-        printf("---------------------------------------------------------------------------------------\n");
-        printf("|  Não encontrou a Chave!  \n");
-        printf("---------------------------------------------------------------------------------------\n");
-        imprimeDado(&dado, &entrada);
-        printf("\n");
-    }
+    Registro *entrada = NULL;
+    criaArvoreBin(arvoreBin, arquivo, quantidade, &dado->analise);
+    bool pesquisa = pesquisaArvoreBin(arvoreBin, *chave, &dado->analise, entrada);
+    impreResultado(pesquisa,dado,&entrada->key);    
     fclose(arvoreBin);
 }

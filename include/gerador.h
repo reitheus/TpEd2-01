@@ -1,9 +1,6 @@
 #include <ctype.h>
-#include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 #include <math.h>
-#include <time.h>
 #include "../include/item.h"
 
 #ifndef GERADOR_H

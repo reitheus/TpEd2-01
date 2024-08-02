@@ -1,4 +1,4 @@
- #include <stdio.h>
+#include <stdio.h>
 #include "../include/pesquisaBinariaInterna.h"
 
 void dicionarioInicio(Dicionario *dicio, int maximo, Item *x){
