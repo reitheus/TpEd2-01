@@ -12,9 +12,9 @@ typedef struct registro{
 
 void imprimeDado(Analise* ,Registro* );
 
-void arvoreBinaria(FILE* ,long* ,int* ,DadosPesquisa* ,Item* );
+void arvoreBinaria(FILE* ,long int* ,int* ,DadosPesquisa* ,Item*);
 
-void criaArvoreBin(FILE* ,FILE* ,long* ,Analise* );
+void criaArvoreBin(FILE* ,FILE* ,long int* ,Analise* );
 
 bool pesquisaArvoreBin(FILE* ,int ,Analise* ,Registro* );
 

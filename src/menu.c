@@ -2,6 +2,7 @@
 #include "../include/item.h"
 #include "../include/sequencial.h"
 #include "../include/arvorebin.h"
+#include "../include/arvoreb.h"
 #include <ctype.h>
 #include <string.h>
 
@@ -60,6 +61,7 @@ int menu(int argc, char **argv) {
   entrada.analise.comppre = 0;
 
 
+
   if(argc == 6){
     strcpy(entrada.op, argv[5]);
   }
@@ -108,7 +110,7 @@ int menu(int argc, char **argv) {
       arvoreBinaria(pFile,&entrada.quant,&entrada.chave,&entrada,&x);
     break;
     case 3:
-      acessoSequencial(pFile, entrada.quant, entrada.situacao, &x, entrada.chave, &entrada);
+      criaarvoreb(pFile,&x,&entrada);
     break;
     case 4:
       acessoSequencial(pFile, entrada.quant, entrada.situacao, &x, entrada.chave, &entrada);

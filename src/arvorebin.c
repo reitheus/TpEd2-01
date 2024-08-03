@@ -52,11 +52,11 @@ void criaArvoreBin(FILE *arvoreBin, FILE *arquivo, long *quantidade, Analise *da
         }
         i++;
     }
-    dado->timepre = (double)clock() - dado->timepre;
+    dado->timepre = (double) ((clock() - dado->timepre)/CLOCKS_PER_SEC);
 }
 
 // Pesquisa da Arvore binaria de pesquisa em memoria externa
-bool pesquisaArvoreBin(FILE *arvoreBin, int chaveP, Analise *dado, Registro* aux) {
+bool pesquisaArvoreBin(FILE *arvoreBin, int chaveP, Analise *dado, Registro *aux) {
     dado->timepesquisa = (double)clock();
     dado->transpesquisa += 1;
     fseek(arvoreBin, 0, SEEK_SET);
@@ -76,19 +76,19 @@ bool pesquisaArvoreBin(FILE *arvoreBin, int chaveP, Analise *dado, Registro* aux
             if (dado->comppesquisa == 0) {
                 dado->comppesquisa += 1;
             }
-            dado->timepesquisa = clock() - dado->timepesquisa;
+            dado->timepesquisa = (double)((clock() - dado->timepesquisa)/CLOCKS_PER_SEC);
             return true;
         }
     }
-    dado->timepesquisa = (double)clock() - dado->timepesquisa;
+    dado->timepesquisa = (double)((clock() - dado->timepesquisa)/CLOCKS_PER_SEC);
     return false;
 }
 
-void arvoreBinaria(FILE* arquivo, long* quantidade, int *chave,DadosPesquisa* dado,Item *info) {
+void arvoreBinaria(FILE *arquivo, long int *quantidade, int *chave,DadosPesquisa *dado,Item *info) {
     FILE *arvoreBin = fopen("ArvoreBin.bin", "w+b");
-    Registro *entrada = NULL;
+    Registro entrada;
     criaArvoreBin(arvoreBin, arquivo, quantidade, &dado->analise);
-    bool pesquisa = pesquisaArvoreBin(arvoreBin, *chave, &dado->analise, entrada);
-    impreResultado(pesquisa,dado,&entrada->key);    
+    bool pesquisa = pesquisaArvoreBin(arvoreBin, *chave, &dado->analise, &entrada);
     fclose(arvoreBin);
+    impreResultado(pesquisa,dado,&entrada.key);    
 }
