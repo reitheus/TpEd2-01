@@ -17,8 +17,8 @@ typedef struct TipoPagina{
             Apontador filho[(2*M)+1];//pi
         }U0;
         struct externo{//externo
-            int ne;//
-            Item re[(2*M)];
+            int ne;//quantida externo
+            Item re[(2*M)];//Vetor de itens
         }U1;
     }UU;
     

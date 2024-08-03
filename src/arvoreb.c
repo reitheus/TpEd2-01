@@ -102,7 +102,7 @@ void ins(Item registro, Apontadores Arvore, short *cresceu, Item* registroretorn
     ApTemp->quant = 0;
     ApTemp->filhos[0] = NULL;
 
-    if (i < M+1) {
+    if (i < M + 1) {
         inserenaPagina(ApTemp, Arvore->pai[2 * M-1], Arvore->filhos[2 * M], analise);
         Arvore->quant--;
         inserenaPagina(Arvore, *registroretorno, *ApRetorno, analise);
