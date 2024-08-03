@@ -3,6 +3,7 @@
 #include "../include/sequencial.h"
 #include "../include/arvorebin.h"
 #include "../include/arvoreb.h"
+#include "../include/arvorebEst.h"
 #include <ctype.h>
 #include <string.h>
 
@@ -113,7 +114,7 @@ int menu(int argc, char **argv) {
       criaarvoreb(pFile,&x,&entrada);
     break;
     case 4:
-      acessoSequencial(pFile, entrada.quant, entrada.situacao, &x, entrada.chave, &entrada);
+      criaarvoreBE(pFile,&x,&entrada);
     break;
     case 5:
       gerar(pFile, entrada);

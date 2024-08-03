@@ -2,24 +2,34 @@
 #define ARVOREBEST_H
 
 #include "../include/item.h"
+#define M 10
 
+typedef enum {Interna, Externa} TipoIntExt;
 
-#define M 10// Ordem da árvore
+typedef struct TipoPagina* Apontador;
 
-//criando variável ponteiro do tipo página
-typedef struct Pagina* Apontadores;
+typedef struct TipoPagina{
+    TipoIntExt Pt;
+    union folha{
+        struct interno{//interno
+            int quant;//ni
+            Item pai[2*M];//ri
+            Apontador filho[(2*M)+1];//pi
+        }U0;
+        struct externo{//externo
+            int ne;//
+            Item re[(2*M)];
+        }U1;
+    }UU;
+    
+} TipoPagina;
 
-typedef struct Pagina {
-    short quant;// quantidades de itens nos vetores 
-    Item pai[M*M];// vetor de itens 
-    Apontadores filhos[(M*M) + 1]; // vetor de apontadores 
-} Pagina; 
-
-void inicializa(Apontadores Arvore);
-void pesquisar(Item* x, Apontadores Arvore);
-void insere(Item x, Apontadores* Arvore); 
-void ins(Item x,Apontadores Arvore, short *cresceu, Item* registroretorno, Apontadores* ApRetorno);
-void inserenaPagina(Apontadores Arvore, Item dados, Apontadores ApDir);
-void imprimir(Item x);
+void liberaPaginaBE(Apontador );
+void liberaArvoreBE(Apontador *);
+void pesquisaArvorebEst(Item* ,Apontador* ,Analise* ,bool *);
+void inserenaPaginaBE(Apontador , Item , Apontador , Analise* );
+void insBE(Item , Apontador , short *, Item* , Apontador* , Analise* );
+void insereBE(Item , Apontador* , Analise* );
+void criaarvoreBE(FILE *, Item *, DadosPesquisa *);
 
 #endif// arvorebEst.h
