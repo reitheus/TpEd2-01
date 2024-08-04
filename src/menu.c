@@ -76,7 +76,7 @@ int menu(int argc, char **argv) {
     printf("Erro 2");
     erros();
     return 0;
-  }else if( (strcmp(entrada.op, "-P") != 0 || strcmp(entrada.op, "-p") != 0) && argc == 6){
+  }else if( (strcmp(entrada.op, "-P") != 0 && strcmp(entrada.op, "-p") != 0) && argc == 6){
     printf("Erro 3");
     erros();
     return 0;
