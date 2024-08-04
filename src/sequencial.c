@@ -37,8 +37,10 @@ bool pesquisaSequencial(int *tab, int tam, Item* item, FILE *pFile, int itensPag
 
   }
   
-  if(i == 0) //se i = 0 o item não esta no arquivo
+  if(i == 0){ //se i = 0 o item não esta no arquivo
+    free(pagina);
     return false;
+  }
   else {
     // a ultima página pode não estar completa
     if (i < tam){ 
@@ -91,11 +93,11 @@ bool pesquisaSequencial(int *tab, int tam, Item* item, FILE *pFile, int itensPag
 void acessoSequencial(FILE *pFile, int numItems, int situation, Item *item, int chave, DadosPesquisa *entrada){
 
   //variavel para testes
-  entrada->analise.timepre = clock();
+  entrada->analise.timepre = (double)clock();
   int itensPagina;// = escolheQuantItens(numItems);//calcula quantos itens vai ter por pagina
-  itensPagina = 7;
+  itensPagina = 20;
   int maxTabela = numItems/itensPagina;//calcula quantidade de paginas para criar a tabela
-  printf("\nmaxTab %i\n", maxTabela);
+  
   int *tabela;
   tabela = (int*)malloc(sizeof(int) * maxTabela);//alloca a tabela de paginas
 
