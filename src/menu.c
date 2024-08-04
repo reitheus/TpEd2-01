@@ -127,7 +127,7 @@ int menu(int argc, char **argv) {
 
   //printTeste();
 
-  if(argc != 5){
+  if(entrada.metodo != 5){
     fclose(pFile);
   }
 
