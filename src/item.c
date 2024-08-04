@@ -1,7 +1,7 @@
 #include "../include/item.h"
 
 void imprimeDado(DadosPesquisa *dado, Item *entrada) {
-    if(strcmp(dado->op,"-p")==0){
+    if(strcmp(dado->op,"-p")==0 || strcmp(dado->op,"-P")==0){
       printf("|  Chave: %i\n", entrada->chave);
       printf("|  Dado1: %li\n", entrada->dado1);
       printf("|  Dado2: %s\n", entrada->dado2);
