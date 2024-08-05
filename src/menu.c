@@ -108,7 +108,7 @@ int menu(int argc, char **argv) {
       
     break;
     case 2:
-      arvoreBinaria(pFile,&entrada.quant,&entrada.chave,&entrada,&x);
+      arvoreBinaria(pFile,&entrada.quant,&entrada.chave,&entrada);
     break;
     case 3:
       criaarvoreb(pFile,&x,&entrada);

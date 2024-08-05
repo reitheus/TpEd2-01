@@ -1,7 +1,7 @@
 #include "../include/arvorebin.h"
 
 // cria uma arvore em memoria externa
-void criaArvoreBin(FILE *arvoreBin, FILE *arquivo, long *quantidade, Analise *dado) {
+void criaArvoreBin(FILE *arvoreBin, FILE *arquivo,Analise *dado) {
     dado->timepre = (double)clock();
     if (arvoreBin == NULL || arquivo == NULL) {
         printf("Erro no arquivo\n");
@@ -10,9 +10,8 @@ void criaArvoreBin(FILE *arvoreBin, FILE *arquivo, long *quantidade, Analise *da
     Registro aux, aux1;
     Item info;
     int att, cont;
-    long i = 0;
     dado->transpre += 1;
-    while (fread(&info, sizeof(Item), 1, arquivo) == 1 && i < *quantidade) {
+    while (fread(&info, sizeof(Item), 1, arquivo) == 1) {
         att = 0;
         aux.dir = -1;
         aux.esq = -1;
@@ -50,17 +49,17 @@ void criaArvoreBin(FILE *arvoreBin, FILE *arquivo, long *quantidade, Analise *da
             }
 
         }
-        i++;
     }
     dado->timepre = (double) ((clock() - dado->timepre)/CLOCKS_PER_SEC);
 }
 
 // Pesquisa da Arvore binaria de pesquisa em memoria externa
-bool pesquisaArvoreBin(FILE *arvoreBin, int chaveP, Analise *dado, Registro *aux) {
+bool pesquisaArvoreBin(FILE *arvoreBin, int chaveP, Analise *dado, Registro *aux,long *quant) {
+    int i = 0;
     dado->timepesquisa = (double)clock();
     dado->transpesquisa += 1;
     fseek(arvoreBin, 0, SEEK_SET);
-    while (fread(aux, sizeof(Registro), 1, arvoreBin) == 1) {
+    while (fread(aux, sizeof(Registro), 1, arvoreBin) == 1 && i < *quant) {
         dado->transpesquisa += 1;
         if (aux->key.chave != chaveP) {
             if (chaveP < aux->key.chave) {
@@ -79,16 +78,17 @@ bool pesquisaArvoreBin(FILE *arvoreBin, int chaveP, Analise *dado, Registro *aux
             dado->timepesquisa = (double)((clock() - dado->timepesquisa)/CLOCKS_PER_SEC);
             return true;
         }
+        i++;
     }
     dado->timepesquisa = (double)((clock() - dado->timepesquisa)/CLOCKS_PER_SEC);
     return false;
 }
 
-void arvoreBinaria(FILE *arquivo, long int *quantidade, int *chave,DadosPesquisa *dado,Item *info) {
+void arvoreBinaria(FILE *arquivo, long int *quantidade, int *chave,DadosPesquisa *dado) {
     FILE *arvoreBin = fopen("ArvoreBin.bin", "w+b");
     Registro entrada;
-    criaArvoreBin(arvoreBin, arquivo, quantidade, &dado->analise);
-    bool pesquisa = pesquisaArvoreBin(arvoreBin, *chave, &dado->analise, &entrada);
+    criaArvoreBin(arvoreBin, arquivo, &dado->analise);
+    bool pesquisa = pesquisaArvoreBin(arvoreBin, *chave, &dado->analise, &entrada,quantidade);
     fclose(arvoreBin);
     impreResultado(pesquisa,dado,&entrada.key);    
 }
