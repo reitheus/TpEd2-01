@@ -14,7 +14,7 @@ int escolheQuantItens(int numItems){
 
   free(vetItems);
 
-  return itensPagina;
+  return itensPagina/10;
 
 }
 
