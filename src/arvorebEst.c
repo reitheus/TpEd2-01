@@ -100,59 +100,94 @@ void insBE(Item registro, Apontador Arvore, short *cresceu, Item* registroretorn
         *ApRetorno = NULL;
         return;
     }
-    
-    // Encontra o filho adequado para seguir a inserção
-    while (i < Arvore->UU.U0.quant && registro.chave > Arvore->UU.U0.pai[i-1].chave) {
+    if(Arvore->Pt == Interna){
+
+        // Encontra o filho adequado para seguir a inserção
+        while (i < Arvore->UU.U0.quant && registro.chave > Arvore->UU.U0.pai[i-1].chave) {
+            i++;
+            analise->comppre+=1;
+        }
+
+        // Se o item já existir ele não é reinserido 
+        if (registro.chave == Arvore->UU.U0.pai[i-1].chave) {
+            printf("Registro existente");
+            analise->comppre+=1;
+            *cresceu = 0;
+            return;
+        }
+
+        if (registro.chave < Arvore->UU.U0.pai[i-1].chave) {
+            i--;
+            analise->comppre+=1;
+        }
+
+        // Insere o registro no filho apropriado
+        insBE(registro, Arvore->UU.U0.filho[i], cresceu, registroretorno, ApRetorno, analise);
+        if (!*cresceu) {
+        return;
+        }
+            
+        // Se a página não precisa ser dividida
+        if (Arvore->UU.U0.quant < 2 * M) {
+            inserenaPaginaI(Arvore, *registroretorno, *ApRetorno, analise);
+            *cresceu = 0;
+            return;
+        }
+
+        // Divide a página
+        ApTemp = (Apontador)malloc(sizeof(TipoPagina)); // Aloca uma nova página
+        ApTemp->Pt = Interna;
+        ApTemp->UU.U0.quant = 0;
+        ApTemp->UU.U0.filho[0] = NULL; 
+
+        // Insere as chaves e filhos adequados na nova página
+        if (i < M + 1) {
+            inserenaPaginaI(ApTemp, Arvore->UU.U0.pai[2 * M - 1], Arvore->UU.U0.filho[2 * M], analise);
+            Arvore->UU.U0.quant--;
+            inserenaPaginaI(Arvore, *registroretorno, *ApRetorno, analise);
+        } else {
+            inserenaPaginaI(ApTemp, *registroretorno, *ApRetorno, analise);
+        }
+
+        for (j = M + 2; j <= 2 * M; j++) {
+            inserenaPaginaI(ApTemp, Arvore->UU.U0.pai[j-1], Arvore->UU.U0.filho[j], analise);
+        }
+
+        Arvore->UU.U1.ne = M;
+        ApTemp->UU.U0.filho[0] = Arvore->UU.U0.filho[M + 1];
+        *registroretorno = Arvore->UU.U0.pai[M];
+        *ApRetorno = ApTemp;
+        *cresceu = 1;
+        analise->transpre+=1;
+    }
+    i = 1;
+    while(i < Arvore->UU.U1.ne && registro.chave > Arvore->UU.U1.re[i-1].chave){
         i++;
-        analise->comppre+=1;
+        analise->comppre++;
     }
 
-    if (registro.chave < Arvore->UU.U0.pai[i-1].chave) {
-        i--;
-        analise->comppre+=1;
-    }
-
-    // Insere o registro no filho apropriado
-    insBE(registro, Arvore->UU.U0.filho[i], cresceu, registroretorno, ApRetorno, analise);
-    if (!*cresceu) {
-    return;
-    }
-        
-    // Se a página não precisa ser dividida
-    if (Arvore->UU.U1.ne < 2 * M) {
-        analise->comppre+=1;
-        inserenaPaginaBE(Arvore, *registroretorno, *ApRetorno, analise);
-        *cresceu = 0;
+    if(Arvore->UU.U1.ne < 2*M){
+        inserenaPaginaE(Arvore,*registroretorno,*ApRetorno,analise);
+        *cresceu=0;
         return;
     }
-
-    // Divide a página
-    ApTemp = (Apontador)malloc(sizeof(TipoPagina)); // Aloca uma nova página
+    //precisa dividr
+    ApTemp = (Apontador)malloc(sizeof(TipoPagina));
     ApTemp->Pt = Externa;
     ApTemp->UU.U1.ne = 0;
-    ApTemp->UU.U0.filho[0] = NULL; 
 
-    // Insere as chaves e filhos adequados na nova página
-    if (i < M + 1) {
-        inserenaPaginaBE(ApTemp, Arvore->UU.U0.pai[2 * M - 1], Arvore->UU.U0.filho[2 * M], analise);
-        Arvore->UU.U0.quant--;
-        inserenaPaginaBE(Arvore, *registroretorno, *ApRetorno, analise);
-    } else {
-        inserenaPaginaBE(ApTemp, *registroretorno, *ApRetorno, analise);
+    if(i < M + 1){
+
+    }else{
+        inserenaPaginaE(ApTemp,*registroretorno, *ApRetorno,analise);
+    }
+    for(j = M+2; j <= M*2;j++){
+        ApTemp->UU.U1.re[j] = Arvore->UU.U1.re[j-1];
+        analise->transpre++;
     }
 
-    for (j = M + 2; j <= 2 * M; j++) {
-        inserenaPaginaBE(ApTemp, Arvore->UU.U0.pai[j-1], Arvore->UU.U0.filho[j], analise);
-    }
-
-    Arvore->UU.U1.ne = M + 1;
-    ApTemp->UU.U0.filho[0] = Arvore->UU.U0.filho[M + 1];
-    *registroretorno = Arvore->UU.U0.pai[M];
-    *ApRetorno = ApTemp;
-    *cresceu = 1;
-    analise->transpre+=1;
-
-    
+    Arvore->UU.U1.ne = M+1;
+    ApTemp->UU.U0.filho[0]
 }
 
 // Função para inserir um registro na árvore B* e lidar com o caso em que a raiz precisa ser dividida
