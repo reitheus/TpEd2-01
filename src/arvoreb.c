@@ -147,6 +147,7 @@ void pesquisar(Item *registro, Apontadores Arvore, Analise* analise, bool *achou
         return;
     }
 
+    analise->transpesquisa++; 
     analise->comppesquisa+=1;
     // Enquanto i for menor que a quantidade de Itens na árvore e a chave for  
     while (i < Arvore->quant && registro->chave > Arvore->pai[i-1].chave) {
