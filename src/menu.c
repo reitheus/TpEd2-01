@@ -1,10 +1,9 @@
 #include "../include/menu.h"
 #include "../include/item.h"
 #include "../include/sequencial.h"
-#include "../include/arvorebin.h"
-#include "../include/arvoreb.h"
-#include "../include/arvorebEst.h"
 #include <ctype.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 
@@ -61,6 +60,7 @@ int menu(int argc, char **argv) {
   entrada.analise.transpesquisa = 0;
   entrada.analise.comppre = 0;
 
+  printf("Arquivo gerado!");
 
 
   if(argc == 6){
@@ -76,7 +76,7 @@ int menu(int argc, char **argv) {
     printf("Erro 2");
     erros();
     return 0;
-  }else if( (strcmp(entrada.op, "-P") != 0 && strcmp(entrada.op, "-p") != 0) && argc == 6){
+  }else if( (strcmp(entrada.op, "-P") != 0 || strcmp(entrada.op, "-p") != 0) && argc == 6){
     printf("Erro 3");
     erros();
     return 0;
@@ -108,13 +108,13 @@ int menu(int argc, char **argv) {
       
     break;
     case 2:
-      arvoreBinaria(pFile,&entrada.quant,&entrada.chave,&entrada);
+      acessoSequencial(pFile, entrada.quant, entrada.situacao, &x, entrada.chave, &entrada);
     break;
     case 3:
-      criaarvoreb(pFile,&x,&entrada);
+      acessoSequencial(pFile, entrada.quant, entrada.situacao, &x, entrada.chave, &entrada);
     break;
     case 4:
-      criaarvoreBE(pFile,&x,&entrada);
+      acessoSequencial(pFile, entrada.quant, entrada.situacao, &x, entrada.chave, &entrada);
     break;
     case 5:
       gerar(pFile, entrada);
@@ -127,7 +127,7 @@ int menu(int argc, char **argv) {
 
   //printTeste();
 
-  if(entrada.metodo != 5){
+  if(argc != 5){
     fclose(pFile);
   }
 

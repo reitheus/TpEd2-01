@@ -1,7 +1,12 @@
 #include "../include/menu.h"
 #include "../include/item.h"
 #include "../include/sequencial.h"
-
+#include <ctype.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>
+#include <time.h>
 
 //função cria arquivo crescente (arquivo por ponteiro, struct entrada com dados do arquivo)
 int geradorAscendente(FILE *pFile, DadosPesquisa entrada){
@@ -12,8 +17,6 @@ int geradorAscendente(FILE *pFile, DadosPesquisa entrada){
         
         v.chave = i;
         v.dado1 = rand();
-
-        
 
         fwrite(&v, sizeof(Item), 1, pFile);
         
@@ -73,12 +76,11 @@ int geradorAleatoriamente(FILE *pFile, DadosPesquisa entrada){
         while(i < x){
 
             while(v[randon].chave != 0){
-                randon = rand() % tamV;
-                
+                randon = rand() % tamV;              
             }
             
             v[randon].chave = i;
-
+            //printf("entrou %i", v[randon].chave );
 
             i++;
         }
@@ -115,7 +117,7 @@ int gerar(FILE *pFile, DadosPesquisa entrada){
         case 3:
             pFile = fopen("aleatorio.bin", "wb");
             geradorAleatoriamente(pFile,  entrada);
-
+            //printTeste(pFile,  entrada);
             fclose(pFile);
         break;
         default:
