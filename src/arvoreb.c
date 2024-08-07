@@ -191,6 +191,7 @@ void criaarvoreb(FILE *arquivo, Item *registro, DadosPesquisa *dados) {
     // Número de comparações ao inserir dados
     dados->analise.timepesquisa = (double)clock();
     bool pesq;
+    registro->chave = dados->chave;
     pesquisar(registro, Arvore, &dados->analise, &pesq);
     dados->analise.timepesquisa = (((double)clock() - dados->analise.timepesquisa) / CLOCKS_PER_SEC);
     impreResultado(pesq, dados, registro);
