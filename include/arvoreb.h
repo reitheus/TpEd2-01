@@ -2,7 +2,7 @@
 #define ARVOREB_H
 #include "../include/item.h"
 
-#define M 10// Ordem da árvore
+#define M 2// Ordem da árvore
 
 //criando variável ponteiro do tipo página
 typedef struct Pagina* Apontadores;

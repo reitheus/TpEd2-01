@@ -1,5 +1,10 @@
 #include "../include/arvorebEst.h"
 
+void iniciaArvoreBE(Apontador* Arvore) { // Cria apontador para a árvore
+    *Arvore = NULL;
+    printf("Arvore inicializada\n");
+}
+
 // Função para liberar memória de uma página da árvore
 void liberaPaginaBE(Apontador Ap) {
     if (Ap != NULL) {
@@ -31,12 +36,12 @@ void pesquisaArvorebEst(Item *dado, Apontador *arvore, Analise* info, bool *acho
     if (Pg->Pt == Interna) {
         i = 1;
         // Encontra o filho adequado para seguir a busca
-        while (i < Pg->UU.U0.quant && dado->chave > Pg->UU.U0.pai[i-1].chave) {
+        while (i < Pg->UU.U0.quant && dado->chave > Pg->UU.U0.pai[i-1]) {
             i++;
             info->comppesquisa += 1;
         }
         // Chama a função recursivamente no filho adequado
-        if (dado->chave < Pg->UU.U0.pai[i-1].chave) {
+        if (dado->chave < Pg->UU.U0.pai[i-1]) {
             info->transpesquisa += 1;
             pesquisaArvorebEst(dado, &Pg->UU.U0.filho[i-1], info, achou);
         } else {
@@ -63,145 +68,167 @@ void pesquisaArvorebEst(Item *dado, Apontador *arvore, Analise* info, bool *acho
 }
 
 // Função para inserir um registro em uma página externa
-void inserenaPaginaBE(Apontador Arvore, Item dados, Apontador ApDir, Analise* analise) {
+void inserenaPaginaBI(Apontador arvore, TipoChave dados, Apontador ApDir, Analise* analise) {
     int k;
-    k = Arvore->UU.U1.ne;
+    k = arvore->UU.U0.quant;
     analise->transpre++;
     // Insere o registro na posição correta
-    while (k > 0){
-        if(dados.chave >= Arvore->UU.U1.re[k-1].chave) {
-            break;
-        }
+    while (k > 0 && dados < arvore->UU.U0.pai[k-1]) {
         analise->comppre++;
-        Arvore->UU.U1.re[k] = Arvore->UU.U1.re[k-1];
-        Arvore->UU.U0.filho[k + 1] = Arvore->UU.U0.filho[k];
-        analise->transpre+=2;
+        arvore->UU.U0.pai[k] = arvore->UU.U0.pai[k-1];
+        arvore->UU.U0.filho[k + 1] = arvore->UU.U0.filho[k];
+        analise->transpre += 2;
         k--;
-        if(k < 1)
-            k = 0; 
     }
-    Arvore->UU.U1.re[k] = dados;
-    Arvore->UU.U0.filho[k + 1] = ApDir; 
-    Arvore->UU.U1.ne++;
-    analise->transpre+=2;
+    arvore->UU.U0.pai[k] = dados;
+    arvore->UU.U0.filho[k + 1] = ApDir; 
+    arvore->UU.U0.quant++;
+    analise->transpre += 2;
+
+}
+    
+void inserenaPaginaBE(Apontador arvore, Item dados, Analise* analise){
+    int k;
+    k = arvore->UU.U1.ne;
+    analise->transpre++;
+
+    while (k > 0 && dados.chave < arvore->UU.U1.re[k-1].chave) {
+        analise->comppre++;
+        arvore->UU.U1.re[k] = arvore->UU.U1.re[k-1];
+        k--;
+    }
+    arvore->UU.U1.re[k] = dados;
+    arvore->UU.U1.ne++;
+    analise->transpre++;
+
     
 }
 
 // Função para inserir um registro na árvore B* e lidar com a divisão de páginas
-void insBE(Item registro, Apontador Arvore, short *cresceu, Item* registroretorno, Apontador* ApRetorno, Analise* analise) {
-    long i = 1;
-    long j;
+void insBE(Item registro, Apontador Arvore, short *cresceu, TipoChave* registroretorno, Apontador* ApRetorno, Analise* analise) {
+    int i = 1;
+    int j;
     Apontador ApTemp;
 
     // Se a árvore está vazia, cria um novo nó
     if (Arvore == NULL) {
+        printf("Arvore vazia\n");
         *cresceu = 1;
-        *registroretorno = registro;
+        *registroretorno = registro.chave;
         *ApRetorno = NULL;
         return;
     }
-    if(Arvore->Pt == Interna){
 
+    if(Arvore->Pt == Interna){
         // Encontra o filho adequado para seguir a inserção
-        while (i < Arvore->UU.U0.quant && registro.chave > Arvore->UU.U0.pai[i-1].chave) {
+        while (i < Arvore->UU.U0.quant && registro.chave > Arvore->UU.U0.pai[i-1]) {
+            //printf("chave: %d > ChaveArvore: %d; i: %d\n",registro.chave,Arvore->UU.U0.pai[i-1],i);
             i++;
             analise->comppre+=1;
         }
 
-        // Se o item já existir ele não é reinserido 
-        if (registro.chave == Arvore->UU.U0.pai[i-1].chave) {
-            printf("Registro existente");
-            analise->comppre+=1;
-            *cresceu = 0;
-            return;
-        }
+        insBE(registro,Arvore,cresceu,registroretorno,ApRetorno,analise);
+        if(!*cresceu)return;
 
-        if (registro.chave < Arvore->UU.U0.pai[i-1].chave) {
-            i--;
-            analise->comppre+=1;
-        }
-
-        // Insere o registro no filho apropriado
-        insBE(registro, Arvore->UU.U0.filho[i], cresceu, registroretorno, ApRetorno, analise);
-        if (!*cresceu) {
-        return;
-        }
-            
         // Se a página não precisa ser dividida
-        if (Arvore->UU.U0.quant < 2 * M) {
-            inserenaPaginaI(Arvore, *registroretorno, *ApRetorno, analise);
+        if (Arvore->UU.U0.quant < M) {
+           // printf("inseriu interna\n");
+            inserenaPaginaBI(Arvore, *registroretorno,*ApRetorno,analise);
             *cresceu = 0;
             return;
         }
+        
 
+        //printf("precisa ser dividida/RegRetorno: %d\n",*registroretorno);
         // Divide a página
         ApTemp = (Apontador)malloc(sizeof(TipoPagina)); // Aloca uma nova página
         ApTemp->Pt = Interna;
         ApTemp->UU.U0.quant = 0;
         ApTemp->UU.U0.filho[0] = NULL; 
 
-        // Insere as chaves e filhos adequados na nova página
-        if (i < M + 1) {
-            inserenaPaginaI(ApTemp, Arvore->UU.U0.pai[2 * M - 1], Arvore->UU.U0.filho[2 * M], analise);
+    
+        if (i <= M / 2) {
+            inserenaPaginaBI(ApTemp, Arvore->UU.U0.pai[M-1], Arvore->UU.U0.filho[M], analise);
+            printf("inseriu interna\n");
             Arvore->UU.U0.quant--;
-            inserenaPaginaI(Arvore, *registroretorno, *ApRetorno, analise);
+            inserenaPaginaBI(Arvore, *registroretorno, *ApRetorno, analise);
+            printf("inseriu interna\n");
         } else {
-            inserenaPaginaI(ApTemp, *registroretorno, *ApRetorno, analise);
+            inserenaPaginaBI(ApTemp, *registroretorno, *ApRetorno, analise);
+            printf("inseriu interna\n");
         }
 
-        for (j = M + 2; j <= 2 * M; j++) {
-            inserenaPaginaI(ApTemp, Arvore->UU.U0.pai[j-1], Arvore->UU.U0.filho[j], analise);
+        for (j = M / 2 + 1; j < M; j++) {
+            inserenaPaginaBI(ApTemp, Arvore->UU.U0.pai[j], Arvore->UU.U0.filho[j + 1], analise);
+            printf("inseriu interna\n");
         }
 
-        Arvore->UU.U1.ne = M;
-        ApTemp->UU.U0.filho[0] = Arvore->UU.U0.filho[M + 1];
-        *registroretorno = Arvore->UU.U0.pai[M];
+        Arvore->UU.U0.quant = M / 2;
+        ApTemp->UU.U0.filho[0] = Arvore->UU.U0.filho[M / 2 + 1];
+        *registroretorno = Arvore->UU.U0.pai[M / 2];
         *ApRetorno = ApTemp;
-        *cresceu = 1;
         analise->transpre+=1;
     }
+    //Externo
+    printf("externo\n");
     i = 1;
+    //acha a posição
     while(i < Arvore->UU.U1.ne && registro.chave > Arvore->UU.U1.re[i-1].chave){
+        printf("chave: %d > ChaveArvore: %d; i: %d\n",registro.chave,Arvore->UU.U0.pai[i-1],i);
         i++;
         analise->comppre++;
     }
 
+    if (i < Arvore->UU.U1.ne && registro.chave == Arvore->UU.U1.re[i-1].chave) {
+        printf("chave: %d < ChaveArvore: %d; i: %d\n",registro.chave,Arvore->UU.U0.pai[i-1],i);
+        *cresceu = 0;
+        analise->comppre+=1;
+    }
+
+    //pagina não ta cheia
     if(Arvore->UU.U1.ne < 2*M){
-        inserenaPaginaE(Arvore,*registroretorno,*ApRetorno,analise);
+        inserenaPaginaBE(Arvore,registro,analise);
+        printf("inseriu externa\n");
         *cresceu=0;
         return;
     }
-    //precisa dividr
     ApTemp = (Apontador)malloc(sizeof(TipoPagina));
     ApTemp->Pt = Externa;
     ApTemp->UU.U1.ne = 0;
 
+    for(j = M / 2 + 1;j < M;j++){
+        ApTemp->UU.U1.re[j - M / 2] = Arvore->UU.U1.re[j];
+    }
+    ApTemp->UU.U1.ne = M / 2;
+    Arvore->UU.U1.ne = M / 2;
+
     if(i < M + 1){
-
+        inserenaPaginaBE(Arvore,registro,analise);
+        printf("inseriu externa\n");
     }else{
-        inserenaPaginaE(ApTemp,*registroretorno, *ApRetorno,analise);
-    }
-    for(j = M+2; j <= M*2;j++){
-        ApTemp->UU.U1.re[j] = Arvore->UU.U1.re[j-1];
-        analise->transpre++;
+        inserenaPaginaBE(ApTemp,registro,analise);
+        printf("inseriu externa\n");
     }
 
-    Arvore->UU.U1.ne = M+1;
-    ApTemp->UU.U0.filho[0]
+    *registroretorno = ApTemp->UU.U1.re[0].chave;
+    *ApRetorno = ApTemp;
+    *cresceu = 1;
+    
 }
 
 // Função para inserir um registro na árvore B* e lidar com o caso em que a raiz precisa ser dividida
-void insereBE(Item reg, Apontador* Arvore, Analise* analise) {
+void insereBE(Item reg,Apontador* Arvore, Analise* analise) {
     short cresceu;
-    Item registroretorno;
-    Apontador ApRetorno, ApTemp;
+    TipoChave registroretorno;
+    TipoPagina *ApRetorno, *ApTemp;
 
     // Insere o registro na árvore
     insBE(reg, *Arvore, &cresceu, &registroretorno, &ApRetorno, analise);
 
     // Se a raiz foi dividida e precisa de uma nova raiz
     if (cresceu) {
-        ApTemp = (Apontador)malloc(sizeof(TipoPagina));
+        printf("creceu\n");
+        ApTemp = (TipoPagina *)malloc(sizeof(TipoPagina));
         ApTemp->Pt = Interna;
         ApTemp->UU.U0.quant = 1;
         ApTemp->UU.U0.pai[0] = registroretorno;
@@ -214,9 +241,9 @@ void insereBE(Item reg, Apontador* Arvore, Analise* analise) {
 
 // Função para criar a árvore B* a partir de dados de um arquivo e realizar pesquisas
 void criaarvoreBE(FILE *arquivo, Item *registro, DadosPesquisa *dados) {
-    Apontador Arvore = NULL;
+    Apontador Arvore;
     int i = 0;
-
+    iniciaArvoreBE(&Arvore);
     dados->analise.timepre = (double)clock(); // Marca o tempo de início do processamento
     dados->analise.comppre += 1;
     // Lê os dados do arquivo e insere na árvore
