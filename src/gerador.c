@@ -1,12 +1,7 @@
 #include "../include/menu.h"
 #include "../include/item.h"
 #include "../include/sequencial.h"
-#include <ctype.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <math.h>
-#include <time.h>
+
 
 //função cria arquivo crescente (arquivo por ponteiro, struct entrada com dados do arquivo)
 int geradorAscendente(FILE *pFile, DadosPesquisa entrada){
@@ -35,7 +30,6 @@ int geradorDescendente(FILE *pFile, DadosPesquisa entrada){
         v.chave = i;
         v.dado1 = rand();
      
-
         fwrite(&v, sizeof(Item), 1, pFile);
         
     }
@@ -52,6 +46,7 @@ int geradorAleatoriamente(FILE *pFile, DadosPesquisa entrada){
     int x = 0;
     int i = 0;
     int randon;
+    int quantTemp = entrada.quant;
     int escreveQuant;
 
     if(entrada.quant <= 10){
@@ -63,33 +58,37 @@ int geradorAleatoriamente(FILE *pFile, DadosPesquisa entrada){
     }
 
     v = malloc(tamV * sizeof(Item));
-
+    
     escreveQuant = tamV;
     randon = rand() % tamV;
     while( i < entrada.quant ){
-        for(j = 0; j < tamV; j++){
+        if(quantTemp < tamV){//se a quantidade de itens for menor do que a o maximo do vetor o 
+            tamV = quantTemp;
+
+        }
+        for(j = 0; j < tamV; j++){//zera o vetor
             v[j].chave = 0;
         }
-
+        escreveQuant = tamV;
         x += tamV;
-        
-        while(i < x){
+        quantTemp -= tamV;
 
-            while(v[randon].chave != 0){
-                randon = rand() % tamV;              
+        
+        
+        while(i < x){//enquanto não colocar todos os nḿeros no vetor repete o vetor
+
+            while(v[randon].chave != 0){//escolhe um lugar aeatorio no vetor para colocar o numero
+                randon = rand() % tamV;
+                
             }
             
             v[randon].chave = i;
-            //printf("entrou %i", v[randon].chave );
+            randon = rand() % tamV;
 
             i++;
         }
 
-        if(x > entrada.quant){
-            x = x - tamV;
-            escreveQuant = entrada.quant - x;
-        }
-
+       
         fwrite(v, sizeof(Item), escreveQuant, pFile);
         
     }
@@ -117,7 +116,7 @@ int gerar(FILE *pFile, DadosPesquisa entrada){
         case 3:
             pFile = fopen("aleatorio.bin", "wb");
             geradorAleatoriamente(pFile,  entrada);
-            //printTeste(pFile,  entrada);
+
             fclose(pFile);
         break;
         default:

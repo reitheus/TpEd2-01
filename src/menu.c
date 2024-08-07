@@ -1,11 +1,13 @@
 #include "../include/menu.h"
 #include "../include/item.h"
 #include "../include/sequencial.h"
+#include "../include/arvorebin.h"
+#include "../include/arvoreb.h"
+#include "../include/arvorebEst.h"
 #include <ctype.h>
-#include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 
+#define NITENS 150
 
 int erros() {
   printf("Formato incorreto!\n");
@@ -22,19 +24,29 @@ int erros() {
   return 0;
 }
 
-int printTeste(){
-  FILE *pFile2;
-  pFile2 = fopen("aleatorio.bin", "rb");
-  Item vetorTeste[100];
-  fread(vetorTeste,sizeof(Item), 100, pFile2);
-  printf("\n\n");
-  for(int w = 0; w < 100; w++){
-    printf("Item %i\n", vetorTeste[w].chave);
-  }
+int printArquivo(int tam, FILE * pFile){
+  int quant = NITENS;
+  Item vetor[NITENS];
+  fseek(pFile, 0, SEEK_SET);//coloca o ponteiro no inicio do aquivo
 
-  fclose(pFile2);
+  while(tam > 0){
+    
+    if(tam < NITENS){
+      quant = tam;
+    }
+    tam -= quant;
+
+    fread(vetor,sizeof(Item), quant, pFile);
+    //fseek(pFile, NITENS, SEEK_CUR);
+    for(int i = 0; i < quant; i++){
+      printf("Item %i\n", vetor[i].chave);
+    }
+  }
+    
+
   return 0;
 }
+
 
 int menu(int argc, char **argv) {
   /*
@@ -60,7 +72,6 @@ int menu(int argc, char **argv) {
   entrada.analise.transpesquisa = 0;
   entrada.analise.comppre = 0;
 
-  printf("Arquivo gerado!");
 
 
   if(argc == 6){
@@ -76,7 +87,7 @@ int menu(int argc, char **argv) {
     printf("Erro 2");
     erros();
     return 0;
-  }else if( (strcmp(entrada.op, "-P") != 0 || strcmp(entrada.op, "-p") != 0) && argc == 6){
+  }else if( (strcmp(entrada.op, "-P") != 0 && strcmp(entrada.op, "-p") != 0) && argc == 6){
     printf("Erro 3");
     erros();
     return 0;
@@ -98,23 +109,19 @@ int menu(int argc, char **argv) {
     }
   }
   
-  
-
-
   switch(entrada.metodo){
     case 1:
-
       acessoSequencial(pFile, entrada.quant, entrada.situacao, &x, entrada.chave, &entrada);
-      
+     
     break;
     case 2:
-      acessoSequencial(pFile, entrada.quant, entrada.situacao, &x, entrada.chave, &entrada);
+      arvoreBinaria(pFile,&entrada.quant,&entrada.chave,&entrada);
     break;
     case 3:
-      acessoSequencial(pFile, entrada.quant, entrada.situacao, &x, entrada.chave, &entrada);
+      criaarvoreb(pFile,&x,&entrada);
     break;
     case 4:
-      acessoSequencial(pFile, entrada.quant, entrada.situacao, &x, entrada.chave, &entrada);
+      criaarvoreBE(pFile,&x,&entrada);
     break;
     case 5:
       gerar(pFile, entrada);
@@ -125,9 +132,11 @@ int menu(int argc, char **argv) {
 
   }
 
-  //printTeste();
+if((strcmp(entrada.op, "-P") == 0 || strcmp(entrada.op, "-p") == 0) && entrada.metodo != 5){
+  printArquivo(entrada.quant, pFile);
+}
 
-  if(argc != 5){
+  if(entrada.metodo != 5){
     fclose(pFile);
   }
 
