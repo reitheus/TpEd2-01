@@ -182,6 +182,7 @@ void criaarvoreb(FILE *arquivo, Item *registro, DadosPesquisa *dados) {
     dados->analise.timepre = (double)clock(); // Marcar o tempo de início do processamento
     dados->analise.comppre += 1;
     // Lendo dados do arquivo e inserindo na árvore
+    dados->analise.transpre += 1;
     while ((fread(registro, sizeof(Item), 1, arquivo) == 1) && i < dados->quant) {
         insere(*registro, &Arvore, &dados->analise);
         i++;
