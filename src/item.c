@@ -8,7 +8,7 @@ void impPre(DadosPesquisa *dados){
   for(int i = 0;i<=54;i++)printf(" ");
   printf(TAB_VER);
   for(int i = 0;i <= 41;i++)printf(" ");
-  printf(BOLD("Pré - Processamento:"));
+  printf(BOLD(YELLOW("Pré - Processamento:")));
   for(int i = 0;i < 45;i++)printf(" ");
   printf(TAB_VER"\n");
 
@@ -46,7 +46,7 @@ void impPesq(DadosPesquisa *dados){
   for(int i = 0;i<=54;i++)printf(" ");
   printf(TAB_VER);
   for(int i = 0;i <= 46;i++)printf(" ");
-  printf(BOLD("Pesquisa: "));
+  printf(BLUE(BOLD("Pesquisa: ")));
   for(int i = 0;i < 50;i++)printf(" ");
   printf(TAB_VER"\n");
 
