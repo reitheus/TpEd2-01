@@ -30,16 +30,18 @@ void pesquisaArvorebEst(Item *dado, TipoPagina *arvore, Analise* info, bool *ach
     if (arvore->Pt == Interna) {
         i = 1;
         // Encontra o filho adequado para seguir a busca
+        info->comppesquisa += 1;
         while (i < Pg.UU.U0.quant && dado->chave > Pg.UU.U0.pai[i-1]) {
             i++;
             info->comppesquisa += 1;
         }
         // Chama a função recursivamente no filho adequado
+        info->transpesquisa += 1;
         if (dado->chave < Pg.UU.U0.pai[i-1]) {
-            info->transpesquisa += 1;
+            
             pesquisaArvorebEst(dado, Pg.UU.U0.filho[i-1], info, achou);
         } else {
-            info->transpesquisa += 1;
+            
             pesquisaArvorebEst(dado, Pg.UU.U0.filho[i], info, achou);
         }
         return;
@@ -47,16 +49,16 @@ void pesquisaArvorebEst(Item *dado, TipoPagina *arvore, Analise* info, bool *ach
 
     // Se o nó é externo (folha)
     i = 1;
+   info->comppesquisa += 1;
     while (i < Pg.UU.U1.ne && dado->chave > Pg.UU.U1.re[i-1].chave) {
         i++;
         info->comppesquisa += 1;
     }
     // Verifica se o dado foi encontrado
+    info->comppesquisa += 1;
     if (dado->chave == Pg.UU.U1.re[i-1].chave) {
-        info->comppesquisa += 1;
         *achou = true;
     } else {
-        info->comppesquisa += 1;
         *achou = false;
     }
 }
@@ -66,6 +68,7 @@ void inserenaPaginaBE(TipoPagina *Ap, Item *dados, Analise* analise){
     int k;
     k = Ap->UU.U1.ne;
     analise->transpre++;
+    analise->comppre++;
     //Percorre o vetor para ver onde ira inserir a chave corretamente
     while (k > 0 && Ap->UU.U1.re[k-1].chave > dados->chave) {
         analise->comppre++;
@@ -85,6 +88,7 @@ void inserenaPaginaBI(TipoPagina *arvore, TipoChave dados, TipoPagina *ApDir, An
     k = arvore->UU.U0.quant;
 
     analise->transpre++;
+    analise->comppre++;
     // Insere o registro na posição correta
     while (k > 0 && arvore->UU.U0.pai[k-1] > dados) {
         analise->comppre++;
@@ -109,8 +113,9 @@ void insBE(Item *registro, TipoPagina* Arvore, short *cresceu, TipoChave *regist
 
     
         // Se a página não precisa ser dividida
+       
         if (Arvore->UU.U0.quant < 2 * M) {
-            analise->comppre++;
+            
             analise->transpre++;
             inserenaPaginaBE(Arvore,registro,analise);
             *cresceu = 0;
@@ -124,15 +129,16 @@ void insBE(Item *registro, TipoPagina* Arvore, short *cresceu, TipoChave *regist
             ApTemp->UU.U1.ne = 0;
             
             //se o registro for ser colocado no meio do vetor se não executa a outra condição
+            analise->comppre++;
             if(registro->chave <= Arvore->UU.U1.re[M].chave){
-                analise->comppre++;
+                
                 inserenaPaginaBE(ApTemp, &Arvore->UU.U1.re[2 * M - 1],analise);
                 Arvore->UU.U1.ne--;
                 inserenaPaginaBE(Arvore,registro,analise);
                 analise->transpre+=2;
             }else{
                 inserenaPaginaBE(ApTemp,registro,analise);
-                analise->transpre++;
+                
             }
             //faz os ajustes na nova pagina
             for(int j = M; j < 2 * M;j++){
@@ -153,7 +159,8 @@ void insBE(Item *registro, TipoPagina* Arvore, short *cresceu, TipoChave *regist
     }
     //Inserção interna
     i = 1;  
-    //busaca onde deve ser colocado  
+    //busca onde deve ser colocado  
+    analise->comppre++;
     while(i < Arvore->UU.U0.quant && registro->chave > Arvore->UU.U0.pai[i-1]){
         analise->comppre++;
         i++;
@@ -183,7 +190,7 @@ void insBE(Item *registro, TipoPagina* Arvore, short *cresceu, TipoChave *regist
             ApTemp->UU.U0.quant = 0;
 
             if(i <= M + 1){
-                analise->comppre++;
+                
                 inserenaPaginaBI(ApTemp,Arvore->UU.U0.pai[2 * M - 1],Arvore->UU.U0.filho[2 * M],analise);
                 Arvore->UU.U0.quant--;
                 inserenaPaginaBI(Arvore,*registroretorno,*ApRetorno,analise);
@@ -262,6 +269,7 @@ void criaarvoreBE(FILE *arquivo, Item *registro, DadosPesquisa *dados) {
     // Realiza pesquisa na árvore
     dados->analise.timepesquisa = (double)clock();
     bool pesq;
+    registro->chave = dados->chave;
     pesquisaArvorebEst(registro, Arvore, &dados->analise, &pesq);
     dados->analise.timepesquisa = (((double)clock() - dados->analise.timepesquisa) / CLOCKS_PER_SEC);
 
