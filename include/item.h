@@ -7,6 +7,7 @@
 #include <stdbool.h>
 #include <string.h>
 
+#define M 10
 
 typedef struct analise{
   double timepre;//tempo no pré processamento

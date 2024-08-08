@@ -2,37 +2,35 @@
 #define ARVOREBEST_H
 
 #include "../include/item.h"
-#define M 2
+
 typedef int TipoChave;
 typedef enum {Interna, Externa} TipoIntExt;
 
-typedef struct TipoPagina* Apontador;
-
-typedef struct TipoPagina{
+typedef struct tipopagina{
     TipoIntExt Pt;
     union folha{
         struct interno{//interno
             int quant;//ni
-            TipoChave pai[M];//ri
-            Apontador filho[M + 1];//pi
+            TipoChave pai[2 * M];//ri
+            struct tipopagina *filho[2 * M + 1];//pi
         }U0;
         struct externo{//externo
             int ne;//quantida externo
-            Item re[M];//Vetor de itens
+            Item re[2 * M];//Vetor de itens
+            struct tipopagina *prox;
             
         }U1;
     }UU;
     
 } TipoPagina;
 
-void iniciaArvoreBE(Apontador* );
-void liberaPaginaBE(Apontador );
-void liberaArvoreBE(Apontador *);
-void pesquisaArvorebEst(Item* ,Apontador* ,Analise* ,bool *);
-void inserenaPaginaBI(Apontador , TipoChave , Apontador , Analise* );
-void inserenaPaginaBE(Apontador , Item , Analise* );
-void insBE(Item , Apontador , short *, TipoChave* , Apontador* , Analise* );
-void insereBE(Item , Apontador* , Analise* );
+void iniciaArvoreBE(TipoPagina** );
+void liberaArvoreBE(TipoPagina** );
+void pesquisaArvorebEst(Item* ,TipoPagina* ,Analise* ,bool *);
+void inserenaPaginaBI(TipoPagina* ,TipoChave ,TipoPagina* ,Analise*);
+void inserenaPaginaBE(TipoPagina* ,Item* ,Analise* );
+void insBE(Item* ,TipoPagina* ,short* ,TipoChave* ,TipoPagina** ,Analise* );
+void insereBE(Item* ,TipoPagina** ,Analise* );
 void criaarvoreBE(FILE *, Item *, DadosPesquisa *);
 
 #endif// arvorebEst.h
