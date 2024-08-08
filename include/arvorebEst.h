@@ -7,22 +7,22 @@ typedef int TipoChave;
 typedef enum {Interna, Externa} TipoIntExt;
 
 typedef struct tipopagina{
-    TipoIntExt Pt;
+    TipoIntExt Pt;//ponteiro de controle de no
     union folha{
         struct interno{//interno
             int quant;//ni
             TipoChave pai[2 * M];//ri
             struct tipopagina *filho[2 * M + 1];//pi
-        }U0;
+        }U0;//indice
         struct externo{//externo
             int ne;//quantida externo
             Item re[2 * M];//Vetor de itens
             struct tipopagina *prox;
             
-        }U1;
-    }UU;
+        }U1;//folha
+    }UU;//união
     
-} TipoPagina;
+} TipoPagina;//arvore
 
 void iniciaArvoreBE(TipoPagina** );
 void liberaArvoreBE(TipoPagina** );

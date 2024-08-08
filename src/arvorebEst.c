@@ -6,7 +6,7 @@ void iniciaArvoreBE(TipoPagina **Arvore) { // Cria apontador para a árvore
 
 // Função para liberar a árvore inteira
 void liberaArvoreBE(TipoPagina **Arvore) {
-    if((*Arvore)->UU.U0.filho[0]->Pt == Externa){
+    if((*Arvore)->UU.U0.filho[0]->Pt == Externa){//se for folha libera se não faz recursão
         for(int i = 0; i <= (*Arvore)->UU.U0.quant;i++){
             free((*Arvore)->UU.U0.filho[i]);
         }
@@ -61,24 +61,25 @@ void pesquisaArvorebEst(Item *dado, TipoPagina *arvore, Analise* info, bool *ach
     }
 }
 
+//Função para inserir um registro em uma pagina externa
 void inserenaPaginaBE(TipoPagina *Ap, Item *dados, Analise* analise){
     int k;
     k = Ap->UU.U1.ne;
     analise->transpre++;
-
+    //Percorre o vetor para ver onde ira inserir a chave corretamente
     while (k > 0 && Ap->UU.U1.re[k-1].chave > dados->chave) {
         analise->comppre++;
         Ap->UU.U1.re[k] = Ap->UU.U1.re[k-1];
-
         k--;
     }
+    //adiciona o registro
     Ap->UU.U1.re[k] = *dados;
     Ap->UU.U1.ne++;
     analise->transpre++;
     
 }
 
-// Função para inserir um registro em uma página externa
+// Função para inserir um registro em uma página interna
 void inserenaPaginaBI(TipoPagina *arvore, TipoChave dados, TipoPagina *ApDir, Analise *analise) {
     short int k;
     k = arvore->UU.U0.quant;
@@ -92,6 +93,7 @@ void inserenaPaginaBI(TipoPagina *arvore, TipoChave dados, TipoPagina *ApDir, An
         analise->transpre += 2;
         k--;
     }
+    //adiciona no registro
     arvore->UU.U0.pai[k] = dados;
     arvore->UU.U0.filho[k + 1] = ApDir; 
     arvore->UU.U0.quant++;
@@ -114,13 +116,14 @@ void insBE(Item *registro, TipoPagina* Arvore, short *cresceu, TipoChave *regist
             *cresceu = 0;
             return;
         }
-
+        //se precisar cria uma nova página
         TipoPagina *ApTemp = (TipoPagina*)malloc(sizeof(TipoPagina));
-
-        if(ApTemp != NULL){
+        
+        if(ApTemp != NULL){//verifica se foi criado corretamente
             ApTemp->Pt = Externa;
             ApTemp->UU.U1.ne = 0;
             
+            //se o registro for ser colocado no meio do vetor se não executa a outra condição
             if(registro->chave <= Arvore->UU.U1.re[M].chave){
                 analise->comppre++;
                 inserenaPaginaBE(ApTemp, &Arvore->UU.U1.re[2 * M - 1],analise);
@@ -131,15 +134,15 @@ void insBE(Item *registro, TipoPagina* Arvore, short *cresceu, TipoChave *regist
                 inserenaPaginaBE(ApTemp,registro,analise);
                 analise->transpre++;
             }
-            
+            //faz os ajustes na nova pagina
             for(int j = M; j < 2 * M;j++){
                 inserenaPaginaBE(ApTemp,&Arvore->UU.U1.re[j],analise);
                 analise->transpre++;
             }
-            *cresceu = 1;
 
+            //faz os ajustes finais para a inserção: retorno da chave e tratamento de ponteiros
+            *cresceu = 1;
             Arvore->UU.U1.ne = M;
-            
             *registroretorno = Arvore->UU.U1.re[M].chave;
             *ApRetorno = ApTemp;
             ApTemp->UU.U1.prox = Arvore->UU.U1.prox;
@@ -148,12 +151,14 @@ void insBE(Item *registro, TipoPagina* Arvore, short *cresceu, TipoChave *regist
         }  
         return;
     }
-
-    i = 1;    
+    //Inserção interna
+    i = 1;  
+    //busaca onde deve ser colocado  
     while(i < Arvore->UU.U0.quant && registro->chave > Arvore->UU.U0.pai[i-1]){
         analise->comppre++;
         i++;
     }
+    //busca onde colocar
     analise->comppre++;
     if(Arvore->UU.U0.pai[i-1] > registro->chave){
         analise->transpre++;
@@ -162,6 +167,7 @@ void insBE(Item *registro, TipoPagina* Arvore, short *cresceu, TipoChave *regist
         analise->transpre++;
         insBE(registro,Arvore->UU.U0.filho[i],cresceu,registroretorno,ApRetorno,analise);
     }
+    //se cresceu faz os tratamentos de verificar se tem espaço e caso contrario dividir e tratar
     if(*cresceu){
         if(Arvore->UU.U0.quant < 2 * M){
             analise->transpre++;
@@ -169,6 +175,8 @@ void insBE(Item *registro, TipoPagina* Arvore, short *cresceu, TipoChave *regist
             *cresceu = 0;
             return;
         }
+
+        //divisão mesmo processo da divisão de pagina folha porem no indice
         TipoPagina *ApTemp = (TipoPagina*)malloc(sizeof(TipoPagina));
         if(ApTemp != NULL){
             ApTemp->Pt = Interna;
@@ -189,6 +197,7 @@ void insBE(Item *registro, TipoPagina* Arvore, short *cresceu, TipoChave *regist
                 inserenaPaginaBI(ApTemp,Arvore->UU.U0.pai[j],Arvore->UU.U0.filho[j + 1],analise);
                 analise->transpre++;
             }
+            //tratativa de ponterios e retornos
             ApTemp->UU.U0.filho[0] = Arvore->UU.U0.filho[M + 1];
             Arvore->UU.U0.quant = M;
             *registroretorno = Arvore->UU.U0.pai[M];
@@ -211,7 +220,6 @@ void insereBE(Item *reg,TipoPagina **Arvore, Analise* analise) {
         if (cresceu) {
 
             ApTemp = (TipoPagina *)malloc(sizeof(TipoPagina));
-            
             ApTemp->Pt = Interna;
             ApTemp->UU.U0.quant = 1;
             ApTemp->UU.U0.pai[0] = registroretorno;
@@ -222,9 +230,8 @@ void insereBE(Item *reg,TipoPagina **Arvore, Analise* analise) {
             
         }
     }else{
+        //se a arvore ta vazia cria a raiz
         ApTemp = (TipoPagina *)malloc(sizeof(TipoPagina));
-        
-
         ApTemp->Pt = Externa;
         ApTemp->UU.U1.ne = 1;
         ApTemp->UU.U1.re[0] = *reg;
