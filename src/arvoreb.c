@@ -68,19 +68,22 @@ void ins(Item registro, Apontadores Arvore, short *cresceu, Item* registroretorn
     }
 
     // Enquanto o valor de `i` for menor que a quantidade de itens na árvore e a chave do item `x` for maior que a chave do item na posição `i-1` do vetor `pai` da árvore, incrementa `i` para continuar a busca na próxima posição.
-    while (i < Arvore->quant && registro.chave > Arvore->pai[i-1].chave) {
+   analise->comppre++;
+   while (i < Arvore->quant && registro.chave > Arvore->pai[i-1].chave) {
         i++;
         analise->comppre++;
     }
 
     // Se o item já existir ele não é reinserido 
+   analise->comppre+=1;
     if (registro.chave == Arvore->pai[i-1].chave) {
         printf("Registro existente");
-        analise->comppre+=1;
+        
         *cresceu = 0;
         return;
     }
 
+   analise->comppre+=1;
     // Se a chave a ser inserida for menor que a chave da página
     if (registro.chave < Arvore->pai[i-1].chave) {
         i--;
@@ -141,7 +144,7 @@ void pesquisar(Item *registro, Apontadores Arvore, Analise* analise, bool *achou
 
     // Se a árvore estiver vazia
     if (Arvore == NULL) {
-        analise->comppesquisa+=1;
+        //analise->comppesquisa+=1;
         printf("Nenhum registro encontrado.\n");
         *achou = false;
         return;
@@ -156,9 +159,10 @@ void pesquisar(Item *registro, Apontadores Arvore, Analise* analise, bool *achou
     }
 
     // Se a chave for igual ao item da árvore
+   analise->comppesquisa+=1;
     if (registro->chave == Arvore->pai[i-1].chave) {
         *registro = Arvore->pai[i-1];
-        analise->comppesquisa+=1;
+        
         *achou = true;
         return;
     }
@@ -180,7 +184,7 @@ void criaarvoreb(FILE *arquivo, Item *registro, DadosPesquisa *dados) {
     int i = 0;
 
     dados->analise.timepre = (double)clock(); // Marcar o tempo de início do processamento
-    dados->analise.comppre += 1;
+    
     // Lendo dados do arquivo e inserindo na árvore
     dados->analise.transpre += 1;
     while ((fread(registro, sizeof(Item), 1, arquivo) == 1) && i < dados->quant) {
