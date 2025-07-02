@@ -1,25 +1,24 @@
 # Variáveis
-CC = gcc
-CFLAGS = -Wall -g -Iinclude
-EXEC = programa
-SRC_DIR =  src
+CC      = g++
+CFLAGS  = -Wall -g -Isrc
+EXEC    = programa
+SRC_DIR = classes
+OBJ_DIR = obj
 
+SRCS    = $(wildcard $(SRC_DIR)/*.cpp)
+OBJS    = $(patsubst $(SRC_DIR)/%.cpp, $(OBJ_DIR)/%.o, $(SRCS))
 
-
-SRCS = $(wildcard $(SRC_DIR)/*.c)
-
-
-#regra padrão
+# Regras
 all: $(EXEC)
-	
-# Regra de compilação
-$(EXEC): $(SRCS)
+
+$(EXEC): $(OBJS)
 	$(CC) -o $@ $^
 
-# Regra de compilação dos objetos
-$(SRC_DIR)/%.c
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp | $(OBJ_DIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 
-clean:	
-	rm -f $(SRC_DIR)/*.o 
+$(OBJ_DIR):
+	mkdir -p $(OBJ_DIR)
 
+clean:
+	rm -rf $(OBJ_DIR) $(EXEC)
